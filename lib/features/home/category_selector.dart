@@ -1,0 +1,38 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:newsapp/features/home/Category_card.dart';
+import 'package:newsapp/models/category.dart';
+
+class CategorySelector extends StatelessWidget {
+  const CategorySelector({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "home_greeting".tr(),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          Gap(16.h),
+          Expanded(
+            child: ListView.separated(
+              itemBuilder: (context, index) {
+                return CategoryCard(category: CategoryModel.getCategoriesList()[index], index: index,);
+              },
+              separatorBuilder: (context, index) {
+                return Gap(16.h);
+              },
+              itemCount: CategoryModel.getCategoriesList().length,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

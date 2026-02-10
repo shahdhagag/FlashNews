@@ -9,11 +9,13 @@ import 'package:newsapp/models/category.dart';
 class CategoryCard extends StatelessWidget {
   final CategoryModel category;
   final int index;
+  final VoidCallback onTap;
 
   const CategoryCard({
     Key? key,
     required this.category,
     required this.index,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class CategoryCard extends StatelessWidget {
     bool isImageLeft = index % 2 == 0;
 
     return InkWell(
-      onTap: category.onTap,
+      onTap: onTap,
       borderRadius: BorderRadius.circular(24),
       child: Container(
         height: 195.h,
@@ -99,7 +101,6 @@ class CategoryCard extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
 
-          // --- The Dynamic "View All" Button ---
           Container
             (
             //padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
@@ -111,8 +112,9 @@ class CategoryCard extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: isImageLeft
-                  ? [label, SizedBox(width: 8.w), arrowIcon] // Text then Icon
-                  : [arrowIcon, SizedBox(width: 8.w), label], // Icon then Text (Reversed)
+                  ? [label, SizedBox(width: 8.w), arrowIcon] //mra label then icon
+
+                  : [arrowIcon, SizedBox(width: 8.w), label], //icon then label
             ),
           ),
         ],

@@ -1,63 +1,44 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:newsapp/api/api_manager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:newsapp/features/home/bloc/home_cubit.dart';
 import 'package:newsapp/features/home/news/card_news.dart';
-import 'package:newsapp/features/home/widgets/error_widget.dart';
-import 'package:newsapp/features/home/widgets/loading_widget.dart';
-import 'package:newsapp/models/news_response.dart';
-import 'package:newsapp/models/source_response.dart';
 
-class NewsWidegt extends StatefulWidget {
-  const NewsWidegt({super.key, required this.sources});
+class NewsWidegt extends StatelessWidget {
+  const NewsWidegt({super.key});
 
-  final Sources sources;
-
-  @override
-  State<NewsWidegt> createState() => _NewsWidegtState();
-}
-
-class _NewsWidegtState extends State<NewsWidegt> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NewsResponse>(
-      future: ApiManager(Dio())
-          .getNewsBySourceId(widget.sources.id ?? ''),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LoadingWidget();
-        } else if (snapshot.hasError) {
-          return MainErrorWidget(
-            errorMsg: "Something went wrong.",
-            onTryAgain: () {
-              setState(() {});
-            },
-          );
-        } else if (snapshot.data?.status != 'ok') {
-          return MainErrorWidget(
-            errorMsg: snapshot.data?.message ?? "Something went wrong.",
-            onTryAgain: () {
-              setState(() {});
-            },
-          );
-        } else if (snapshot.data?.articles == null ||
-            snapshot.data!.articles!.isEmpty) {
-          return const Center(
-            child: Text("No articles available."),
-          );
-        } else {
-          var articleList = snapshot.data!.articles??[];
-
-          return ListView.builder(
-            padding: EdgeInsets.zero,
-            physics: const BouncingScrollPhysics(),
-            itemCount: articleList.length,
-            itemBuilder: (context, index) {
-              var article = articleList[index];
-
-              return CardNews(article: article);
-            },
-          );
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        if (state is GetNewsLoadingState) {
+          context.loaderOverlay.show();
         }
+
+        if (state is GetNewsSuccessState || state is GetNewsErrorState) {
+          context.loaderOverlay.hide();
+        }
+
+        if (state is GetNewsErrorState) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMsg)));
+        }
+      },
+
+      builder: (context, state) {
+        var bloc = context.watch<HomeCubit>();
+
+        if (bloc.newsList.isEmpty && state is GetNewsSuccessState) {
+          return const Center(child: Text("No articles available"));
+        }
+
+        return ListView.builder(
+          itemCount: bloc.newsList.length,
+          itemBuilder: (context, index) {
+            return CardNews(article: bloc.newsList[index]);
+          },
+        );
       },
     );
   }

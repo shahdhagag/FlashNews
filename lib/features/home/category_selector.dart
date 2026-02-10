@@ -6,32 +6,38 @@ import 'package:newsapp/features/home/Category_card.dart';
 import 'package:newsapp/models/category.dart';
 
 class CategorySelector extends StatelessWidget {
-  const CategorySelector({super.key});
+  const CategorySelector({super.key, required this.onCategorySelected});
+  final Function(CategoryModel) onCategorySelected;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "home_greeting".tr(),
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          Gap(16.h),
-          Expanded(
-            child: ListView.separated(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "home_greeting".tr(),
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Gap(16.h),
+            ListView.separated(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
               itemBuilder: (context, index) {
-                return CategoryCard(category: CategoryModel.getCategoriesList()[index], index: index,);
+                return CategoryCard(category: CategoryModel.getCategoriesList()[index],
+                  index: index,
+                  onTap: () { onCategorySelected(CategoryModel.getCategoriesList()[index]); },
+                );
               },
               separatorBuilder: (context, index) {
                 return Gap(16.h);
               },
               itemCount: CategoryModel.getCategoriesList().length,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

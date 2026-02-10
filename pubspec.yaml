@@ -28,6 +28,8 @@ dependencies:
   webview_flutter: ^4.13.1
   url_launcher: ^6.3.2
   readmore: ^3.0.0
+  pretty_dio_logger: ^1.4.0
+  loader_overlay: ^5.0.0
 
 dev_dependencies:
   flutter_test:

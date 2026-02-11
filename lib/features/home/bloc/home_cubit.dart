@@ -5,8 +5,8 @@ import 'package:newsApp/features/home/data/Repo/home_repo.dart';
 import 'package:newsApp/models/news_response.dart';
 import 'package:newsApp/models/source_response.dart';
 
-
 part 'home_state.dart';
+
 @injectable
 class HomeCubit extends Cubit<HomeState> {
   HomeRepo homeRepo;
@@ -28,12 +28,10 @@ class HomeCubit extends Cubit<HomeState> {
       // final response = await ApiService.dio.get(EndPoints.sourceApi,queryParameters: {
       //   "category":categoryId
       // });
-
       // SourceResponse sourceResponse = SourceResponse.fromJson(response.data);
-
       //sourcesList = sourceResponse.sources ?? [];
-
       //  Load first tab news automatically
+
       if (sourcesList.isNotEmpty) {
         selectedIndex = 0;
         await getNewsData();
@@ -72,6 +70,27 @@ class HomeCubit extends Cubit<HomeState> {
       emit(GetNewsSuccessState());
     } catch (e) {
       emit(GetNewsErrorState(e.toString()));
+    }
+  }
+
+  /// search
+  Future<void> searchNews(String query) async {
+    if (query.isEmpty) return;
+    emit(GetNewsLoadingState());
+
+    try {
+      NewsResponse newsResponse = await homeRepo.searchNews(query);
+
+      // FILTER: Remove articles that are [Removed] or have no title
+      newsList = (newsResponse.articles ?? []).where((article) {
+        return article.title != null &&
+            article.title != "[Removed]" &&
+            article.urlToImage != null;
+      }).toList();
+
+      emit(GetNewsSuccessState());
+    } catch (e) {
+      emit(GetNewsErrorState("Search failed. Please try again."));
     }
   }
 }

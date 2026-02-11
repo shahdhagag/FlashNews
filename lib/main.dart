@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:newsApp/Di/di.dart';
 import 'package:newsApp/core/network/internet_checker.dart';
-import 'package:newsApp/core/observer.dart';
-import 'core/cubits/theme_cubit.dart';
 import 'core/cubits/locale_cubit.dart';
+import 'core/cubits/theme_cubit.dart';
 import 'core/utiles/app_routes.dart';
 import 'core/utiles/app_theme.dart';
+import 'core/utiles/observer.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
   getIt<InternetConnectivity>().initialize();
@@ -18,19 +18,20 @@ void main()async {
   await EasyLocalization.ensureInitialized();
 
   runApp(
-      EasyLocalization(
-        supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
-        path: 'assets/langs',
-        fallbackLocale: const Locale('en', 'US'),
-        startLocale: const Locale('en', 'US'),
-  child:   MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => ThemeCubit()),
-        BlocProvider(create: (context) => LocaleCubit()),
-      ],
-      child: const MyApp(),
+    EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
+      path: 'assets/langs',
+      fallbackLocale: const Locale('en', 'US'),
+      startLocale: const Locale('en', 'US'),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => ThemeCubit()),
+          BlocProvider(create: (context) => LocaleCubit()),
+        ],
+        child: const MyApp(),
+      ),
     ),
-  ));
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -38,7 +39,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Listen to theme changes from ThemeCubit
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, themeState) {
         return ScreenUtilInit(

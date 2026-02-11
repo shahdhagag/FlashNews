@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:newsApp/features/home/Category_card.dart';
+import 'package:newsApp/features/home/widgets/Category_card.dart';
 import 'package:newsApp/models/category.dart';
 
 class CategorySelector extends StatelessWidget {

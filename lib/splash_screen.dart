@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsApp/core/utiles/app_assets.dart';
@@ -31,10 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Expanded(
             child: Center(
-              child: Image.asset(
-                AppAssets.appLogoLight,
-                width: context.w(300),
-              ),
+              child: Image.asset(AppAssets.appLogoLight, width: context.w(300)),
             ),
           ),
         ],

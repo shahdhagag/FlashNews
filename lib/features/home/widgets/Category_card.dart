@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:newsApp/core/cubits/theme_cubit.dart';
-import 'package:newsApp/core/utiles/app_colors.dart';
 import 'package:newsApp/models/category.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -29,7 +28,6 @@ class CategoryCard extends StatelessWidget {
       child: Container(
         height: 195.h,
         decoration: BoxDecoration(
-          // Card background: White in Dark Mode, Black in Light Mode
           color: isDark ? Colors.white : const Color(0xff1c1c1c),
           borderRadius: BorderRadius.circular(24),
         ),
@@ -42,7 +40,7 @@ class CategoryCard extends StatelessWidget {
     );
   }
 
-  // Image Widget with the Figma curve
+  /// Image Widget
   Widget _buildImage({required bool left}) {
     return Expanded(
       flex: 5,
@@ -65,7 +63,7 @@ class CategoryCard extends StatelessWidget {
     );
   }
 
-  // Text Content Widget
+  /// Text Content Widget
   Widget _buildText(BuildContext context, bool isDark, bool isImageLeft) {
     // Define the text part
     Widget label = Text(
@@ -75,7 +73,6 @@ class CategoryCard extends StatelessWidget {
       ),
     );
 
-    // Define the icon part
     Widget arrowIcon = CircleAvatar(
       radius: 18.r,
       backgroundColor: isDark ? Colors.black : Colors.white,
@@ -103,7 +100,6 @@ class CategoryCard extends StatelessWidget {
 
           Container
             (
-            //padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
             padding: EdgeInsetsGeometry.directional(bottom: 4,top: 4,end:isImageLeft? 0:8,start: isImageLeft? 8:0),
             decoration: BoxDecoration(
               color: isDark?Color(0xff808080):Color(0xff8f8f8f),

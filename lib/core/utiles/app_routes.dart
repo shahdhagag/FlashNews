@@ -1,7 +1,7 @@
 
 import 'package:go_router/go_router.dart';
-import 'package:newsapp/features/home/home_screen.dart';
 
+import '../../features/home/home_screen.dart';
 import '../../splash_screen.dart';
 
 class AppRouts {

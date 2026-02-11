@@ -1,8 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:newsapp/api/api_constants.dart';
-import 'package:newsapp/api/endpoints.dart';
-import 'package:newsapp/models/news_response.dart';
-import 'package:newsapp/models/source_response.dart';
+
 class ApiManager {
   final Dio dio;
   ApiManager(this.dio);

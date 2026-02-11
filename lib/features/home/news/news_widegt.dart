@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:newsapp/features/home/bloc/home_cubit.dart';
-import 'package:newsapp/features/home/news/card_news.dart';
+import 'package:newsApp/features/home/bloc/home_cubit.dart';
+import 'package:newsApp/features/home/news/card_news.dart';
 
 class NewsWidegt extends StatelessWidget {
   const NewsWidegt({super.key});
@@ -33,11 +33,19 @@ class NewsWidegt extends StatelessWidget {
           return const Center(child: Text("No articles available"));
         }
 
-        return ListView.builder(
-          itemCount: bloc.newsList.length,
-          itemBuilder: (context, index) {
-            return CardNews(article: bloc.newsList[index]);
+        return RefreshIndicator(
+          onRefresh: () async {
+            await context.read<HomeCubit>().getNewsData();
           },
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(), // important for refresh
+            ),
+            itemCount: bloc.newsList.length,
+            itemBuilder: (context, index) {
+              return CardNews(article: bloc.newsList[index]);
+            },
+          ),
         );
       },
     );

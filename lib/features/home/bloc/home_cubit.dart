@@ -1,14 +1,17 @@
 import 'package:bloc/bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
-import 'package:newsapp/api/api_service.dart';
-import 'package:newsapp/api/endpoints.dart';
-import 'package:newsapp/models/news_response.dart';
-import 'package:newsapp/models/source_response.dart';
+import 'package:newsApp/features/home/data/Repo/home_repo.dart';
+import 'package:newsApp/models/news_response.dart';
+import 'package:newsApp/models/source_response.dart';
+
 
 part 'home_state.dart';
-
+@injectable
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(HomeInitialState());
+  HomeRepo homeRepo;
+
+  HomeCubit(this.homeRepo) : super(HomeInitialState());
 
   List<Sources> sourcesList = [];
   List<Articles> newsList = [];
@@ -19,13 +22,16 @@ class HomeCubit extends Cubit<HomeState> {
     emit(GetSourceLoadingState());
 
     try {
-      final response = await ApiService.dio.get(EndPoints.sourceApi,queryParameters: {
-        "category":categoryId
-      });
-
-      SourceResponse sourceResponse = SourceResponse.fromJson(response.data);
-
+      SourceResponse sourceResponse = await homeRepo.getSources(categoryId);
       sourcesList = sourceResponse.sources ?? [];
+
+      // final response = await ApiService.dio.get(EndPoints.sourceApi,queryParameters: {
+      //   "category":categoryId
+      // });
+
+      // SourceResponse sourceResponse = SourceResponse.fromJson(response.data);
+
+      //sourcesList = sourceResponse.sources ?? [];
 
       //  Load first tab news automatically
       if (sourcesList.isNotEmpty) {
@@ -52,12 +58,14 @@ class HomeCubit extends Cubit<HomeState> {
     emit(GetNewsLoadingState());
 
     try {
-      final response = await ApiService.dio.get(
-        EndPoints.newsApi,
-        queryParameters: {"sources": sourcesList[selectedIndex].id},
+      NewsResponse newsResponse = await homeRepo.getNewsData(
+        sourcesList[selectedIndex].id!,
       );
+      // final response = await ApiService.dio.get(
+      //   EndPoints.newsApi,
+      //   queryParameters: {"sources": sourcesList[selectedIndex].id},
 
-      NewsResponse newsResponse = NewsResponse.fromJson(response.data);
+      //NewsResponse newsResponse = NewsResponse.fromJson(response.data);
 
       newsList = newsResponse.articles ?? [];
 

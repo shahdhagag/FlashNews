@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:newsapp/api/api_manager.dart';
+import 'package:newsApp/api/api_manager.dart';
 class MainErrorWidget extends StatelessWidget {
   const MainErrorWidget({super.key, required this.errorMsg, required this.onTryAgain});
 final String errorMsg;

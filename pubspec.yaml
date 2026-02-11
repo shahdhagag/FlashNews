@@ -1,4 +1,4 @@
-name: newsapp
+name: newsApp
 description: "newsApp"
 
 publish_to: 'none'
@@ -30,11 +30,19 @@ dependencies:
   readmore: ^3.0.0
   pretty_dio_logger: ^1.4.0
   loader_overlay: ^5.0.0
+  connectivity_plus: ^7.0.0
+  internet_connection_checker: ^1.0.0+1
+  pull_to_refresh: ^2.0.0
+  skeletonizer: ^2.1.2
+  injectable: ^2.7.1+4
+  get_it: ^9.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  injectable_generator: ^2.12.0
+  build_runner: ^2.11.0
 
 
 flutter_native_splash:

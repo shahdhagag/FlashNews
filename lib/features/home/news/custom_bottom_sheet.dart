@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:newsapp/core/cubits/theme_cubit.dart';
-import 'package:newsapp/models/news_response.dart';
+import 'package:newsApp/core/cubits/theme_cubit.dart';
+import 'package:newsApp/models/news_response.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void showArticleBottomSheet(BuildContext context, Articles article) {

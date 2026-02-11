@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
-import 'package:newsapp/core/utiles/app_assets.dart';
+import 'package:newsApp/core/utiles/app_assets.dart';
 
 class CategoryModel {
   String id;

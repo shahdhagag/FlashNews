@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:newsapp/core/utiles/app_assets.dart';
-import 'package:newsapp/core/utiles/extentions.dart';
+import 'package:newsApp/core/utiles/app_assets.dart';
+import 'package:newsApp/core/utiles/extentions.dart';
 
 import 'core/utiles/app_routes.dart';
 

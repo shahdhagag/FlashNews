@@ -5,12 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:newsapp/core/cubits/theme_cubit.dart';
-import 'package:newsapp/core/utiles/app_colors.dart';
-import 'package:newsapp/features/home/category_selector.dart';
-import 'package:newsapp/features/home/source/source_categories.dart';
-import 'package:newsapp/features/home/widgets/drawer_widget.dart';
-import 'package:newsapp/models/category.dart';
+import 'package:newsApp/core/cubits/theme_cubit.dart';
+import 'package:newsApp/core/utiles/app_colors.dart';
+import 'package:newsApp/features/home/category_selector.dart';
+import 'package:newsApp/features/home/source/source_categories.dart';
+import 'package:newsApp/features/home/widgets/drawer_widget.dart';
+import 'package:newsApp/models/category.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key,});

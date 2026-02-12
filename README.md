@@ -97,23 +97,22 @@ Users can update the feed instantly with a swipe gesture.
 
 ### App Preview
 
-<img width="1080" height="2280" alt="Home Light"
-src="https://github.com/user-attachments/assets/aa066513-b0bc-412f-bf31-92a862255b63" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/aa066513-b0bc-412f-bf31-92a862255b63" width="230"/>
+  <img src="https://github.com/user-attachments/assets/1a8c86cb-eb44-4587-a74e-e2c075246243" width="230"/>
+  <img src="https://github.com/user-attachments/assets/ef767a09-33b1-4c7f-8518-e71ba772bbea" width="230"/>
+</p>
 
-<img width="1080" height="2280" alt="Home Dark"
-src="https://github.com/user-attachments/assets/1a8c86cb-eb44-4587-a74e-e2c075246243" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e72a2ef7-9c32-4287-9aac-bf200eb21066" width="230"/>
+  <img src="https://github.com/user-attachments/assets/ae9a4564-f13c-442b-8529-5d9e83371f79" width="230"/>
+  <img src="https://github.com/user-attachments/assets/62e540ab-f40f-4ea0-a219-8f08fb02514f" width="230"/>
+</p>
 
-<img width="1080" height="2280" alt="Search Screen"
-src="https://github.com/user-attachments/assets/ef767a09-33b1-4c7f-8518-e71ba772bbea" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9939d237-9eec-493a-ac71-b395dda1eca8" width="230"/>
+</p>
 
-<img width="1080" height="2280" alt="Categories"
-src="https://github.com/user-attachments/assets/e72a2ef7-9c32-4287-9aac-bf200eb21066" />
-
-<img width="1080" height="2280" alt="Offline Mode"
-src="https://github.com/user-attachments/assets/ae9a4564-f13c-442b-8529-5d9e83371f79" />
-
-<img width="1080" height="2280" alt="WebView"
-src="https://github.com/user-attachments/assets/62e540ab-f40f-4ea0-a219-8f08fb02514f" />
 
 ---
 

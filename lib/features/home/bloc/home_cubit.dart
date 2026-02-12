@@ -1,73 +1,54 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
-import 'package:newsApp/features/home/data/Repo/home_repo.dart';
+import 'package:newsApp/features/home/data/local/home_local_repo.dart';
+import 'package:newsApp/features/home/data/remote/home__remote_repo.dart';
 import 'package:newsApp/models/news_response.dart';
 import 'package:newsApp/models/source_response.dart';
-
+import '../../../core/network/internet_checker.dart';
 part 'home_state.dart';
 
 @injectable
 class HomeCubit extends Cubit<HomeState> {
-  HomeRepo homeRepo;
+  final HomeRemoteRepo homeRemoteRepo;
+  final HomeLocalRepo homeLocalRepo;
+  final InternetConnectivity internetConnectivity;
 
-  HomeCubit(this.homeRepo) : super(HomeInitialState());
+  HomeCubit(this.homeRemoteRepo, this.homeLocalRepo, this.internetConnectivity)
+    : super(HomeInitialState());
 
   List<Sources> sourcesList = [];
   List<Articles> newsList = [];
   int selectedIndex = 0;
+  Timer? _debounce;
 
-  /// Get Sources
   Future<void> getSources(String categoryId) async {
     emit(GetSourceLoadingState());
-
     try {
-      SourceResponse sourceResponse = await homeRepo.getSources(categoryId);
-      sourcesList = sourceResponse.sources ?? [];
-
-      // final response = await ApiService.dio.get(EndPoints.sourceApi,queryParameters: {
-      //   "category":categoryId
-      // });
-      // SourceResponse sourceResponse = SourceResponse.fromJson(response.data);
-      //sourcesList = sourceResponse.sources ?? [];
-      //  Load first tab news automatically
+      final response = await _fetchSourcesWithCache(categoryId);
+      sourcesList = response.sources ?? [];
 
       if (sourcesList.isNotEmpty) {
         selectedIndex = 0;
         await getNewsData();
       }
-
       emit(GetSourceSuccessState());
     } catch (e) {
       emit(GetSourceErrorState(e.toString()));
     }
   }
 
-  /// Change Tab
-  void changeSelectedTab(int index) async {
-    selectedIndex = index;
-    emit(OnChangeTabState());
-
-    await getNewsData();
-  }
-
-  /// Get News Data
   Future<void> getNewsData() async {
+    if (sourcesList.isEmpty) return;
     emit(GetNewsLoadingState());
-
     try {
-      NewsResponse newsResponse = await homeRepo.getNewsData(
-        sourcesList[selectedIndex].id!,
-      );
-      // final response = await ApiService.dio.get(
-      //   EndPoints.newsApi,
-      //   queryParameters: {"sources": sourcesList[selectedIndex].id},
+      final sourceId = sourcesList[selectedIndex].id!;
+      final response = await _fetchNewsWithCache(sourceId);
 
-      //NewsResponse newsResponse = NewsResponse.fromJson(response.data);
-
-      newsList = newsResponse.articles ?? [];
+      newsList = (response.articles ?? [])
+          .where((a) => a.title != null && a.title != "[Removed]")
+          .toList();
 
       emit(GetNewsSuccessState());
     } catch (e) {
@@ -75,15 +56,64 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  Future<SourceResponse> _fetchSourcesWithCache(String categoryId) async {
+    if (await internetConnectivity.isConnected) {
+      final remoteData = await homeRemoteRepo.getSources(categoryId);
+      if (remoteData.sources != null) {
+        await homeLocalRepo.saveSources(remoteData.sources!);
+      }
+      return remoteData;
+    }
+    return await homeLocalRepo.getSources(categoryId);
+  }
+
+  Future<NewsResponse> _fetchNewsWithCache(String sourceId) async {
+    if (await internetConnectivity.isConnected) {
+      try {
+        final remoteData = await homeRemoteRepo.getNewsData(sourceId);
+        if (remoteData.articles != null) {
+          await homeLocalRepo.saveArticles(remoteData.articles!);
+        }
+        return remoteData;
+      } catch (e) {
+        // lw 7sl m4kla f remote get it from local
+        return await homeLocalRepo.getNewsData(sourceId);
+      }
+    }
+    return await homeLocalRepo.getNewsData(sourceId);
+  }
+
+  void changeSelectedTab(int index) {
+    selectedIndex = index;
+    emit(OnChangeTabState());
+    getNewsData();
+  }
+
+  void searchNewsDebounced(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(
+      const Duration(milliseconds: 500),
+      () => searchNews(query),
+    );
+  }
+
   /// search
   Future<void> searchNews(String query) async {
     if (query.isEmpty) return;
+
     emit(GetNewsLoadingState());
 
     try {
-      NewsResponse newsResponse = await homeRepo.searchNews(query);
+      NewsResponse newsResponse;
 
-      // FILTER: Remove articles that are [Removed] or have no title
+      if (await internetConnectivity.isConnected) {
+        /// Online search
+        newsResponse = await homeRemoteRepo.searchNews(query);
+      } else {
+        /// Offline search from Hive box
+        newsResponse = await homeLocalRepo.searchNews(query);
+      }
+
       newsList = (newsResponse.articles ?? []).where((article) {
         return article.title != null &&
             article.title != "[Removed]" &&
@@ -95,25 +125,10 @@ class HomeCubit extends Cubit<HomeState> {
       emit(GetNewsErrorState("Search failed. Please try again."));
     }
   }
-  /// search debounced so the request is sent only after a delay
-  ///
-  /// todo: 2adr a3mlha brdo using easy debounce package
-  Timer? _debounce;
 
-  void searchNewsDebounced(String query) {
-    // لو المستخدم كتب حاجة جديدة قبل ما الوقت يخلص
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      // بعد ما المستخدم يبطل كتابة 500ms
-      searchNews(query);
-    });
-  }
   @override
   Future<void> close() {
     _debounce?.cancel();
     return super.close();
   }
-
-
 }

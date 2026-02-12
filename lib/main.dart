@@ -2,20 +2,34 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:newsApp/Di/di.dart';
 import 'package:newsApp/core/network/internet_checker.dart';
 import 'core/cubits/locale_cubit.dart';
 import 'core/cubits/theme_cubit.dart';
 import 'core/utiles/app_routes.dart';
 import 'core/utiles/app_theme.dart';
+import 'core/utiles/hive_constants.dart';
 import 'core/utiles/observer.dart';
+import 'models/news_response.dart';
+import 'models/source_response.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(SourceResponseAdapter());
+  Hive.registerAdapter(SourcesAdapter());
+  Hive.registerAdapter(NewsResponseAdapter());
+  Hive.registerAdapter(ArticlesAdapter());
+
+  await Hive.openBox<Sources>(HiveConstants.sourcesBox);
+  await Hive.openBox<Articles>(HiveConstants.newsbox);
+
   configureDependencies();
   getIt<InternetConnectivity>().initialize();
   Bloc.observer = MyBlocObserver();
   await EasyLocalization.ensureInitialized();
+
 
   runApp(
     EasyLocalization(

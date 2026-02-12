@@ -1,12 +1,12 @@
 import 'package:injectable/injectable.dart';
 import 'package:newsApp/api/api_service.dart';
 import 'package:newsApp/api/endpoints.dart';
-import 'package:newsApp/features/home/data/Repo/home_repo.dart';
+import 'package:newsApp/features/home/data/remote/home__remote_repo.dart';
 import 'package:newsApp/models/news_response.dart';
 import 'package:newsApp/models/source_response.dart';
 
-@Injectable(as: HomeRepo)
-class HomeRepoRemoteImpl extends HomeRepo {
+@Injectable(as: HomeRemoteRepo)
+class HomeRepoRemoteImpl extends HomeRemoteRepo {
   @override
   Future<NewsResponse> getNewsData(String sourceId) async {
     try {
@@ -43,7 +43,7 @@ class HomeRepoRemoteImpl extends HomeRepo {
         queryParameters: {
           "q": query,
           "searchIn": "title,content",
-          // Restricting search to title and content
+          //  search to title and content
         },
       );
 

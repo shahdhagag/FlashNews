@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
@@ -93,4 +95,25 @@ class HomeCubit extends Cubit<HomeState> {
       emit(GetNewsErrorState("Search failed. Please try again."));
     }
   }
+  /// search debounced so the request is sent only after a delay
+  ///
+  /// todo: 2adr a3mlha brdo using easy debounce package
+  Timer? _debounce;
+
+  void searchNewsDebounced(String query) {
+    // لو المستخدم كتب حاجة جديدة قبل ما الوقت يخلص
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      // بعد ما المستخدم يبطل كتابة 500ms
+      searchNews(query);
+    });
+  }
+  @override
+  Future<void> close() {
+    _debounce?.cancel();
+    return super.close();
+  }
+
+
 }

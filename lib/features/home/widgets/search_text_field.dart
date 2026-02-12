@@ -1,3 +1,4 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,7 +57,11 @@ class SearchTextField extends StatelessWidget {
               Icons.close,
               color: isDark ? Colors.white : Colors.black,
             ),
-            onPressed: onClose,
+            onPressed: () {
+              EasyDebounce.cancel('search-debouncer');
+              onClose();
+            },
+
           ),
 
           border: InputBorder.none,
@@ -68,16 +73,32 @@ class SearchTextField extends StatelessWidget {
         ),
 
         /// Search Logic
+        // onChanged: (query) {
+        //   if (query.length > 2) {
+        //     context.read<HomeCubit>().searchNewsDebounced(query);
+        //   }
+        // },
         onChanged: (query) {
-          if (query.length > 2) {
-            context.read<HomeCubit>().searchNews(query);
-          }
+          EasyDebounce.debounce(
+            'search-debouncer',
+            const Duration(milliseconds: 500),
+                () {
+              if (query.isEmpty) return;
+
+              if (query.length > 2) {
+                context.read<HomeCubit>().searchNews(query);
+              }
+            },
+          );
         },
 
         onSubmitted: (query) {
+          EasyDebounce.cancel('search-debouncer');
           context.read<HomeCubit>().searchNews(query);
         },
+
       ),
     );
   }
+
 }
